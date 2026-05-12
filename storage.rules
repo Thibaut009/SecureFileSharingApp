@@ -1,0 +1,29 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // ── Fichiers utilisateur : /files/{uid}/{filename} ───────────────────
+    // Le chemin inclut l'UID pour isoler chaque utilisateur
+    match /files/{uid}/{allPaths=**} {
+
+      // Upload : utilisateur authentifié vers son propre dossier uniquement
+      // Validation : taille max 100 MB, types MIME courants autorisés
+      allow write: if request.auth != null
+                   && request.auth.uid == uid
+                   && request.resource.size <= 104857600
+                   && request.resource.contentType.matches(
+                       '(image|video|audio|application|text)/.*'
+                      );
+
+      // Lecture directe : autorisée uniquement pour le propriétaire.
+      // Pour partager, utiliser la Cloud Function generateSignedUrl
+      // qui génère une URL signée GCS avec TTL court (1h).
+      allow read: if request.auth != null
+                  && request.auth.uid == uid;
+
+      // Suppression : propriétaire uniquement
+      allow delete: if request.auth != null
+                    && request.auth.uid == uid;
+    }
+  }
+}

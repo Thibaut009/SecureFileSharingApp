@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "mcp__Claude_in_Chrome__read_console_messages",
+      "mcp__Claude_in_Chrome__navigate",
+      "PowerShell(Stop-Process -Id 25288 -Force)",
+      "PowerShell($pid = \\(Get-NetTCPConnection -LocalPort 8080 -State Listen -ErrorAction SilentlyContinue\\).OwningProcess; if \\($pid\\) { Stop-Process -Id $pid -Force; \"Killed PID $pid\" } else { \"Port 8080 already free\" })"
+    ]
+  }
+}

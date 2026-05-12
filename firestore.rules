@@ -1,0 +1,34 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Collection "files" : métadonnées des fichiers uploadés ──────────
+    match /files/{fileId} {
+
+      // Lecture : uniquement le propriétaire authentifié
+      allow read: if request.auth != null
+                  && resource.data.ownerId == request.auth.uid;
+
+      // Création : utilisateur authentifié, ownerId = son propre uid
+      // Validation des champs obligatoires et de la taille (100 MB max)
+      allow create: if request.auth != null
+                    && request.resource.data.ownerId == request.auth.uid
+                    && request.resource.data.name is string
+                    && request.resource.data.name.size() > 0
+                    && request.resource.data.size is number
+                    && request.resource.data.size > 0
+                    && request.resource.data.size <= 104857600
+                    && request.resource.data.storagePath is string
+                    && request.resource.data.accessCount == 0;
+
+      // Mise à jour : propriétaire uniquement, ownerId immuable
+      allow update: if request.auth != null
+                    && resource.data.ownerId == request.auth.uid
+                    && request.resource.data.ownerId == resource.data.ownerId;
+
+      // Suppression : propriétaire uniquement
+      allow delete: if request.auth != null
+                    && resource.data.ownerId == request.auth.uid;
+    }
+  }
+}
