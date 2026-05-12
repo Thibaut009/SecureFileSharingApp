@@ -3,6 +3,8 @@
 Cours Cloud Computing — MyDigitalSchool M2  
 Stack : React 19 · TypeScript · Firebase Auth · Cloud Firestore · Firebase Storage · Cloud Functions · Firebase Hosting
 
+**Démonstration vidéo :** [Voir sur Google Drive](https://drive.google.com/file/d/1FYPzSe9qn8VQwacBW6dbwe8TN46sPN--/view?usp=drive_link)
+
 ---
 
 ## Partie 1 — Architecture & Conception
